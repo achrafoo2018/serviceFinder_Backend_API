@@ -14,16 +14,9 @@ class CreateClientsTable extends Migration
     public function up()
     {
         Schema::create('clients', function (Blueprint $table) {
-            $table->id();
-            $table->string('username');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->string('first_name', 50);          
-            $table->string('last_name', 50);
+            $table->unsignedBigInteger('client_id');
+            $table->foreign('client_id')->references('id')->on('users');
             $table->string('contact', 100);
-            $table->rememberToken();
-            $table->timestamps();
         });
     }
 

@@ -14,19 +14,12 @@ class CreateProvidersTable extends Migration
     public function up()
     {
         Schema::create('providers', function (Blueprint $table) {
-            $table->id();
-            $table->string('username');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->string('first_name', 50);          
-            $table->string('last_name', 50);
+            $table->unsignedBigInteger('provider_id');
+            $table->foreign('provider_id')->references('id')->on('users');
             $table->string('service', 100);
             $table->string('speciality', 100);
             $table->string('phone_number', 100);
             $table->float('rating')->nullable()->default(0);
-            $table->rememberToken();
-            $table->timestamps();
         });
     }
 
