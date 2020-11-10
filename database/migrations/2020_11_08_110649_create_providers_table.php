@@ -16,10 +16,12 @@ class CreateProvidersTable extends Migration
         Schema::create('providers', function (Blueprint $table) {
             $table->unsignedBigInteger('provider_id');
             $table->foreign('provider_id')->references('id')->on('users');
-            $table->string('service', 100);
-            $table->string('speciality', 100);
-            $table->string('phone_number', 100);
+            $table->string('service', 100)->nullable();
+            $table->string('speciality', 100)->nullable();
+            $table->string('phone_number', 100)->nullable();
             $table->float('rating')->nullable()->default(0);
+            $table->timestamps();
+
         });
     }
 

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Models\Provider;
+use App\Models\Client;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -54,7 +56,8 @@ class RegisterController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:255', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed']
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'type' =>['required']
         ]);
     }
 
@@ -66,12 +69,25 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'first_name'=> $data['first_name'],
             'last_name'=> $data['last_name'],
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-        ]);
+            'type' => $data['type']
+        ]); 
+        $id = $user->id;
+        if ($data['type'] == "client"){
+            Client::create([
+                'client_id' => $id
+            ]);
+        }
+        else if ($data['type']=="provider"){
+            Provider::create([
+                "provider_id"=>$id
+            ]);
+        }
+        return $user;
     }
 }

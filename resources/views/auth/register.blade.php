@@ -85,9 +85,14 @@
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                             </div>
                         </div>
-                        
-                        
-                        
+                        <div class="form-group row">
+                            <label for="type" class="col-md-4 col-form-label text-md-right">{{ __('I am a :') }}</label>
+                    
+                            <div class="col-md-5 mt-2">
+                                <label class="radio-inline"><input type="radio" name="type" value="client"> Client</label>
+                                <label class="radio-inline"><input type="radio" name="type" value="provider"> Provider</label>
+                            </div>
+                        </div>
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
