@@ -14,7 +14,7 @@ class CreateProfilesTable extends Migration
     public function up()
     {
         Schema::create('profiles', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('provider_id')->nullable();
             $table->foreign('provider_id')->references('provider_id')->on('providers');
             $table->unsignedBigInteger('client_id')->nullable();
