@@ -9,13 +9,15 @@ use App\User;
 use App\Provider;
 use App\Client;
 use Auth;
+use JWTAuth;
 class AuthController extends Controller
 {
     public function login(Request $request){
         $creds = $request->only(['email', 'password']);
-        if(!$token=auth()->attempt($creds)){
+        if(!$token=JWTAuth::attempt($creds)){
             return response()->json([
-                'success'=>false
+                'success'=>false,
+                'message' => 'invalide credential'
             ]);
         }
         return response()->json([
@@ -52,6 +54,36 @@ class AuthController extends Controller
                 'message' => $e
             ]);
         }
-
     }
+    public function logout(Request $request){
+        try{
+            auth()->logout();
+        
+            $data = [
+            
+            'success' => true,
+            
+            'code' => 200,
+            
+            'data' => [
+            
+            'message' => 'Successfully logged out'
+            
+            ],
+            
+            'err' => null
+            
+            ];
+            
+            return response()->json($data);
+        }
+        catch(Exception $e)
+        {
+            return response()->json([
+                "success" => false,
+                'message' => "".$e
+            ]);
+        }
+            
+        }
 }
