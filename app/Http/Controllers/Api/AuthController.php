@@ -10,14 +10,17 @@ use App\Provider;
 use App\Client;
 use Auth;
 use JWTAuth;
+
 class AuthController extends Controller
 {
     public function login(Request $request){
         $creds = $request->only(['email', 'password']);
-        if(!$token=JWTAuth::attempt($creds)){
+        $token=JWTAuth::attempt($creds);
+        
+        if(!$token){
             return response()->json([
                 'success'=>false,
-                'message' => 'invalide credential'
+                'message' => 'invalid credentials'
             ]);
         }
         return response()->json([
