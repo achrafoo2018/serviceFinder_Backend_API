@@ -43,7 +43,7 @@
                             <div class="col-md-6">
                                 <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required autocomplete="name" autofocus>
 
-                                @error('name')
+                                @error('username')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -86,12 +86,17 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="type" class="col-md-4 col-form-label text-md-right">{{ __('I am a :') }}</label>
+                            <label for="type" class="col-md-4 col-form-label text-md-right @error('password') is-invalid @enderror">{{ __('I am a :') }}</label>
                     
-                            <div class="col-md-5 mt-2">
+                            <div class="col-md-5 mt-2" >
                                 <label class="radio-inline"><input type="radio" name="type" value="client"> Client</label>
                                 <label class="radio-inline"><input type="radio" name="type" value="provider"> Provider</label>
                             </div>
+                            @error('type')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
                         </div>
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">

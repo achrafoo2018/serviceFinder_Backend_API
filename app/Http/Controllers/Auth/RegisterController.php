@@ -51,12 +51,12 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255', 'unique:users'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'first_name' => ['required', 'string', 'max:50'],
+            'last_name' => ['required', 'string', 'max:50'],
+            'username' => ['required', 'string', 'max:50', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:100', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'type' =>['required']
+            'type' =>['required', 'max:10']
         ]);
     }
 
@@ -77,16 +77,17 @@ class RegisterController extends Controller
             'type' => $data['type']
         ]); 
         $id = $user->id;
-        if ($data['type'] == "client"){
-            Client::create([
-                'client_id' => $id
-            ]);
-        }
-        else if ($data['type']=="provider"){
+        if ($data['type']=="provider"){
             Provider::create([
                 "provider_id"=>$id
             ]);
         }
+        else{
+            Client::create([
+                'client_id' => $id
+            ]);
+        }
+       
         return $user;
     }
 }
