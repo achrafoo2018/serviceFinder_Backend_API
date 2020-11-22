@@ -62,14 +62,14 @@ class PasswordResetRequestController extends Controller
     public function failedResponse()
     {
         return response()->json([
-            'error' => 'Email does\'t found on our database'
+            'error' => 'Email wasn\'t found in our database'
         ], Response::HTTP_NOT_FOUND);
     }
 
     public function successResponse()
     {
         return response()->json([
-            'data' => 'Reset Email is send successfully, please check your inbox.'
+            'data' => 'Reset Email is sent successfully, please check your inbox.'
         ], Response::HTTP_OK);
     }
 }
