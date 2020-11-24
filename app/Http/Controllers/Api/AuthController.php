@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use App\User;
 use App\Provider;
 use App\Client;
@@ -30,30 +31,39 @@ class AuthController extends Controller
         ]);
     }
     public function register(Request $request){
-        try{
-            $user = User::create([
-                'email' => $request['email'],
-                'password' => Hash::make($request['password']),
-                'type' => $request['type']
-            ]); 
-            if($request['type'] == "client"){
-                Client::create([
-                    'client_id' => $user->id
-                ]);
-            }
-            else if ($request['type'] == "provider"){
-                Provider::create([
-                    "provider_id" => $user->id
-                ]);
-            }
-            return $this->login($request);
+        $rules = [
+            'type' => 'required',
+            'email'    => 'unique:users|required',
+            'password' => 'required',
+        ];
+    
+        $input     = $request->only('email','password', "type");
+        $validator = Validator::make($input, $rules);
+    
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'error' => $validator->messages()]);
         }
-        catch(Exception $e){
-            return response()->json([
-                'success' => false,
-                'message' => $e
+
+        $user = User::create([
+            'email' => $request['email'],
+            'password' => Hash::make($request['password']),
+            'type' => $request['type']
+        ]); 
+
+        if(strtolower($request['type']) == "provider"){
+            Provider::create([
+                "provider_id" => $user->id
             ]);
         }
+        
+        else{
+            Client::create([
+                'client_id' => $user->id
+            ]);
+        }
+            
+        return $this->login($request);
+        
     }
     public function logout(Request $request){
         try{
