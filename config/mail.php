@@ -56,7 +56,7 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'foulene999@gmail.com'),
+        'address' => env('MAIL_FROM_ADDRESS', 'no.reply.service.finder@gmail.com'),
         'name' => env('MAIL_FROM_NAME', 'Service Finder'),
     ],
 
