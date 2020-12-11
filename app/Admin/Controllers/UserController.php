@@ -83,7 +83,7 @@ class UserController extends AdminController
         $form->password('password', __('Password'));
         $form->radio('type', __('Type'))->options(['Client'=>'Client', 'Provider'=>'Provider'])->default('Client');
         $form->saved(function (Form $form) {
-            if($form->type == 'Prodvier'){
+            if($form->type == 'Provider'){
                 Provider::create([
                     "provider_id"=>$form->model()->id
                 ]);
