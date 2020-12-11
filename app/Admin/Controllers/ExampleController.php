@@ -57,7 +57,6 @@ class ExampleController extends AdminController
     protected function form()
     {
         $form = new Form(new ExampleModel);
-
         $form->display('id', __('ID'));
         $form->display('created_at', __('Created At'));
         $form->display('updated_at', __('Updated At'));

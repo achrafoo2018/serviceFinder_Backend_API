@@ -15,7 +15,7 @@ class CreateProvidersTable extends Migration
     {
         Schema::create('providers', function (Blueprint $table) {
             $table->unsignedBigInteger('provider_id');
-            $table->foreign('provider_id')->references('id')->on('users');
+            $table->foreign('provider_id')->references('id')->on('users')->onDelete("cascade");
             $table->string('service', 100)->nullable();
             $table->string('speciality', 100)->nullable();
             $table->string('phone_number', 100)->nullable();
