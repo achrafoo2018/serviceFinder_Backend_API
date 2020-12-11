@@ -73,15 +73,27 @@ class UserController extends AdminController
     {
         $form = new Form(new User());
 
-        $form->text('first_name', __('First name'));
-        $form->text('last_name', __('Last name'));
-        $form->email('email', __('Email'))->rules(function ($form){
-            if (!$id = $form->model()->id) {
-                return 'unique:users,email';
-            }
-        });
-        $form->password('password', __('Password'));
-        $form->radio('type', __('Type'))->options(['Client'=>'Client', 'Provider'=>'Provider'])->default('Client');
+        $form->text('first_name', __('First name'))->rules(function ($form) {
+            if (!$id = $form->model()->id)
+                return 'required';
+            });
+        $form->text('last_name', __('Last name'))->rules(function ($form) {
+            if (!$id = $form->model()->id)
+                return 'required';
+            });
+        $form->email('email', __('Email'))->rules(function ($form) {
+            if (!$id = $form->model()->id)
+                return 'required|unique:users';
+            });
+        $form->password('password', __('Password'))->rules(function ($form) {
+            if (!$id = $form->model()->id)
+                return 'required|min:8';
+            });
+        $form->radio('type', __('Type'))->options(['Client'=>'Client', 'Provider'=>'Provider'])
+                    ->default('Client')->rules(function ($form) {
+                        if (!$id = $form->model()->id)
+                            return 'required';
+                        });
         $form->saved(function (Form $form) {
             if($form->type == 'Provider'){
                 Provider::create([
