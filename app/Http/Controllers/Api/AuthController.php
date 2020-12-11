@@ -30,6 +30,9 @@ class AuthController extends Controller
             'user' => Auth::user()
         ]);
     }
+
+
+    
     public function register(Request $request){
         $rules = [
             'type' => 'required',

@@ -11,6 +11,7 @@ class Provider extends Model
         'service',
         'speciality',
         'phone_number',
+        'description',
         'rating'
     ];
 }
