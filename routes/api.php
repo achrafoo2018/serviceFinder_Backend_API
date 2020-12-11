@@ -20,3 +20,7 @@ Route::get('logout', 'Api\AuthController@logout');
 // Password reset Routes
 Route::post('sendPasswordResetLink', 'Api\ForgotPasswordController@sendResetLinkEmail');
 Route::post('resetPassword', 'Api\ResetPasswordController@reset');
+
+
+Route::get('profile', 'Api\UserController@displayProfile')->name("profile");
+

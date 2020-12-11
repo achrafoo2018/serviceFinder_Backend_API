@@ -19,6 +19,7 @@ class CreateProvidersTable extends Migration
             $table->string('service', 100)->nullable();
             $table->string('speciality', 100)->nullable();
             $table->string('phone_number', 100)->nullable();
+            $table->string('description', 500)->nullable();
             $table->float('rating')->nullable()->default(0);
             $table->timestamps();
 
