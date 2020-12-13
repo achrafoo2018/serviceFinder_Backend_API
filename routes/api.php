@@ -13,14 +13,19 @@ use Illuminate\Http\Request;
 |
 */
 
+
+//Auth Routes
 Route::post('login', 'Api\AuthController@login');
 Route::post('register', 'Api\AuthController@register');
 Route::get('logout', 'Api\AuthController@logout');
+
 
 // Password reset Routes
 Route::post('sendPasswordResetLink', 'Api\ForgotPasswordController@sendResetLinkEmail');
 Route::post('resetPassword', 'Api\ResetPasswordController@reset');
 
 
-Route::get('profile', 'Api\UserController@displayProfile')->name("profile");
-
+// User settings Routes
+Route::post('changePassword', 'Api\UserController@changePassword')->name("changePassword");
+Route::post('updateAccount', 'Api\UserController@updateAccount')->name("updateAccount");
+Route::post('updateProfile', 'Api\UserController@updateProfile')->name("updateProfile");
