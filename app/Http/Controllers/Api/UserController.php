@@ -4,9 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use App\User;
+use App\Http\Controllers\Api\AuthController;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-
+use JWTAuth;
+use Auth;
+use Illuminate\Auth\SessionGuard;
 
 class UserController extends Controller
 {
@@ -41,9 +45,10 @@ class UserController extends Controller
 
     public function updateProfile(Request $request){
         try{
-            $user = User::find((int)$request->id);
-            
-            if($user == Auth::user()){
+            $user = $this->getUserById($request);
+            if($user){
+
+                if($this->validateToken($request, $user)){
 
                 $provider = Provider::where('provider_id',(int)$user->id)->get();
                 if($provider->service != $request->service)
@@ -65,10 +70,10 @@ class UserController extends Controller
                     'user' => $provider
                 ]);
             }
-            else
-                return response()->json([
-                    'error' => 'User not logged in!'
-                ]);
+            return $this->vaidateTokenError();
+        }
+        return $this->getUserByIdError();
+
             
         }catch(ModelNotFoundException $e){
             return response()->json([
@@ -80,32 +85,34 @@ class UserController extends Controller
 
     public function updateAccount(Request $request){
         try{
-            $user = User::find((int)$request->id);
-            if($user == Auth::user()){
+            $user = $this->getUserById($request);
+            if($user){
 
-                if($user->first_name != $request->first_name)
-                    $user->first_name = $request->first_name;
-                
-                if($user->last_name != $request->last_name)
-                    $user->last_name = $request->last_name;
+                if($this->validateToken($request, $user)){
+
+                    if($user->first_name != $request->first_name)
+                        $user->first_name = $request->first_name;
                     
-                if($user->email != $request->email)
-                    $user->email = $request->email;
+                    if($user->last_name != $request->last_name)
+                        $user->last_name = $request->last_name;
+                        
+                    if($user->email != $request->email)
+                        $user->email = $request->email;
 
-                if($user->profile_picture != $request->profile_picture)
-                    $user->profile_picture = $request->profile_picture;
+                    if($user->profile_picture != $request->profile_picture)
+                        $user->profile_picture = $request->profile_picture;
 
-                $user->save();
-                
-                return response()->json([
-                    'success' => true,
-                    'user' => $user
-                ]);
+                    $user->save();
+                    
+                    return response()->json([
+                        'success' => true,
+                        'user' => $user
+                    ]);
+                }
+                return $this->vaidateTokenError();
             }
-            else
-                return response()->json([
-                    'error' => 'User not logged in!'
-                ]);
+            return $this->getUserByIdError();
+
         }catch(ModelNotFoundException $e){
             return response()->json([
                 'error' => $e->getMessage()
@@ -114,30 +121,56 @@ class UserController extends Controller
 
     }
 
-    public function changePassword(Request $request){
-
+    public function changePassword(Request $request)
+    {
         try{
-            $user = User::find((int)$request->id);
-            if($user == Auth::user()){
-                
-                if($user->password != $request->password)
-                    $user->password = $request->password;
-                $user->save();
+            $user = $this->getUserById($request);
+            if($user){
+
+                if($this->validateToken($request, $user)){
+
+                    $password = $request->password;
+
+                    $user->password = Hash::make($password);
             
-            return response()->json([
-                'success' => true,
-                'user' => $user
-            ]);
+                    $user->save();
+
+                    return response()->json([
+                        'Message' => "Password changed successfully!",
+                        'token' => $user->remember_token,
+                        'user' => $user
+                    ]);
+                }
+                return $this->vaidateTokenError();
             }
-            else
-                return response()->json([
-                    'error' => 'User not logged in!'
-                ]);
+            return $this->getUserByIdError();
         }catch(ModelNotFoundException $e){
             return response()->json([
-                'error' => $e->getMessage()
+                'error' => $e.getMessage()
             ]);
         }
+    }
 
+    public static function validateToken(Request $request, User $user){
+        if($user->remember_token == $request->token)
+            return true;
+        return false;
+
+    }
+    
+    public static function getUserById(Request $request){
+        return User::find((int)$request->id);
+    }
+
+    public static function getUserByIdError(){
+        return response()->json([
+            'error' => 'Incorrect User!'
+        ]);
+    }
+
+    public static function validateTokenError(){
+        return response()->json([
+            'error' => 'Incorrect Token!'
+        ]);
     }
 }
