@@ -18,7 +18,7 @@ class CreateReviewsTable extends Migration
             $table->unsignedBigInteger('provider_id')->nullable();
             $table->foreign('provider_id')->references('provider_id')->on('providers');
             $table->unsignedBigInteger('client_id')->nullable();
-            $table->foreign('client_id')->references('client_id')->on('clients');
+            $table->foreign('client_id')->references('id')->on('users');
             $table->integer('rate');
             $table->string('content', 500)->nullable();
             $table->timestamps();

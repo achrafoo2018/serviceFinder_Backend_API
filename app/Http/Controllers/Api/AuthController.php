@@ -11,6 +11,7 @@ use App\Provider;
 use App\Client;
 use Auth;
 use JWTAuth;
+use App\Http\Controllers\Api\UserController;
 
 class AuthController extends Controller
 {
@@ -24,6 +25,9 @@ class AuthController extends Controller
                 'message' => 'invalid credentials'
             ]);
         }
+        $user = Auth::user();
+        $user->remember_token = $token;
+        $user->save();
         return response()->json([
             'success'=>true,
             'token' => $token,
@@ -58,45 +62,36 @@ class AuthController extends Controller
                 "provider_id" => $user->id
             ]);
         }
-        
-        else{
-            Client::create([
-                'client_id' => $user->id
-            ]);
-        }
             
         return $this->login($request);
         
     }
     public function logout(Request $request){
         try{
-            auth()->logout();
-        
-            $data = [
             
-            'success' => true,
-            
-            'code' => 200,
-            
-            'data' => [
-            
-            'message' => 'Successfully logged out'
-            
-            ],
-            
-            'err' => null
-            
-            ];
-            
-            return response()->json($data);
+            $user = UserController::getUserById($request);
+            if($user){
+                if(UserController::validateToken($request, $user)){
+
+                    $user->remember_token = "";
+                    $user->save();
+
+                    return response()->json([
+                        'Message' => "User logged out successfully!",
+                    ]);
+
+                }
+                return UserController::validateTokenError();
+            }
+            return UserController::getUserByIdError();
         }
         catch(Exception $e)
         {
             return response()->json([
-                "success" => false,
                 'message' => "".$e
             ]);
         }
             
         }
+        
 }
