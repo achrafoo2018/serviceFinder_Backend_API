@@ -54,9 +54,7 @@ class UserController extends AdminController
         $show->field('last_name', __('Last name'));
         $show->field('email', __('Email'));
         $show->field('email_verified_at', __('Email verified at'));
-        $show->field('password', __('Password'));
         $show->field('type', __('Type'));
-        $show->field('remember_token', __('Remember token'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -90,12 +88,15 @@ class UserController extends AdminController
             });
         }
         else{
-            $form->text('first_name', __('First name'));
-            $form->text('last_name', __('Last name'));
-            $form->email('email', __('Email'));
-            $form->password('password', __('New Password'));
+            $form->text('first_name', __('First name'))->disable();
+            $form->text('last_name', __('Last name'))->disable();
+            $form->email('email', __('Email'))->disable();
+            $form->password('password', __('New Password'))->updateRules('required|min:8')->autofocus();
             $form->saving(function (Form $form) {
-                $form->password = Hash::make($form->password);
+                if($form->password != null && $form->password != '')
+                    $form->password = Hash::make($form->password);
+                else
+                    $form->ignore($form->password());
             });
         }
         return $form;
