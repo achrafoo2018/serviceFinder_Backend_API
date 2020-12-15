@@ -4,7 +4,6 @@ namespace App\Admin\Controllers;
 
 use App\User;
 use App\Provider;
-use App\Client;
 
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
