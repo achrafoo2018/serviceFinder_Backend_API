@@ -62,12 +62,6 @@ class AuthController extends Controller
                 "provider_id" => $user->id
             ]);
         }
-        
-        else{
-            Client::create([
-                'client_id' => $user->id
-            ]);
-        }
             
         return $this->login($request);
         

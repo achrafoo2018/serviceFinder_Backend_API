@@ -15,7 +15,6 @@ use Illuminate\Auth\SessionGuard;
 class UserController extends Controller
 {
     public function displayUser(Request $request){
-
         try{
 
             $user = User::find((int)$request['id']);

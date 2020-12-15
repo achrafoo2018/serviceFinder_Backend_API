@@ -76,11 +76,6 @@ class RegisterController extends Controller
                 "provider_id"=>$id
             ]);
         }
-        else{
-            Client::create([
-                'client_id' => $id
-            ]);
-        }
        
         return $user;
     }
