@@ -10,6 +10,8 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\Hash;
+
 
 class UserController extends AdminController
 {
@@ -30,13 +32,12 @@ class UserController extends AdminController
         $grid = new Grid(new User());
 
         $grid->column('id', __('Id'));
-        $grid->column('first_name', __('First name'));
-        $grid->column('last_name', __('Last name'));
-        $grid->column('email', __('Email'));
+        $grid->column('first_name', __('First name'))->editable();
+        $grid->column('last_name', __('Last name'))->editable();
+        $grid->column('email', __('Email'))->editable();
         $grid->column('type', __('Type'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
-
         return $grid;
     }
 
@@ -49,7 +50,6 @@ class UserController extends AdminController
     protected function detail($id)
     {
         $show = new Show(User::findOrFail($id));
-
         $show->field('id', __('Id'));
         $show->field('first_name', __('First name'));
         $show->field('last_name', __('Last name'));
@@ -72,40 +72,33 @@ class UserController extends AdminController
     protected function form()
     {
         $form = new Form(new User());
-
-        $form->text('first_name', __('First name'))->rules(function ($form) {
-            if (!$id = $form->model()->id)
-                return 'required';
+        if($form->isCreating()){
+            $form->text('first_name', __('First name'))->creationRules('required');
+            $form->text('last_name', __('Last name'))->creationRules('required');
+            $form->email('email', __('Email'))->creationRules('required|unique:users');
+            $form->password('password', __('Password'))->creationRules('required|min:8');
+            $form->radio('type', __('Type'))->options(['Client'=>'Client', 'Provider'=>'Provider'])
+                        ->default('Client')->creationRules('required');
+            $form->saving(function (Form $form) {
+                $form->password = Hash::make($form->password);
             });
-        $form->text('last_name', __('Last name'))->rules(function ($form) {
-            if (!$id = $form->model()->id)
-                return 'required';
+            $form->saved(function (Form $form) {
+                if($form->type == 'Provider'){
+                    Provider::create([
+                        "provider_id"=>$form->model()->id
+                    ]);
+                }
             });
-        $form->email('email', __('Email'))->rules(function ($form) {
-            if (!$id = $form->model()->id)
-                return 'required|unique:users';
+        }
+        else{
+            $form->text('first_name', __('First name'));
+            $form->text('last_name', __('Last name'));
+            $form->email('email', __('Email'));
+            $form->password('password', __('New Password'));
+            $form->saving(function (Form $form) {
+                $form->password = Hash::make($form->password);
             });
-        $form->password('password', __('Password'))->rules(function ($form) {
-            if (!$id = $form->model()->id)
-                return 'required|min:8';
-            });
-        $form->radio('type', __('Type'))->options(['Client'=>'Client', 'Provider'=>'Provider'])
-                    ->default('Client')->rules(function ($form) {
-                        if (!$id = $form->model()->id)
-                            return 'required';
-                        });
-        $form->saved(function (Form $form) {
-            if($form->type == 'Provider'){
-                Provider::create([
-                    "provider_id"=>$form->model()->id
-                ]);
-            }else{
-                Client::create([
-                    'client_id' => $form->model()->id
-                ]);
-            }
-        });
-
+        }
         return $form;
     }
 }
