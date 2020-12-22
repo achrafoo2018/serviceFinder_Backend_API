@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 */
 
 
+
 //Auth Routes
 Route::post('login', 'Api\AuthController@login');
 Route::post('register', 'Api\AuthController@register');
@@ -23,6 +24,15 @@ Route::get('logout', 'Api\AuthController@logout');
 // Password reset Routes
 Route::post('sendPasswordResetLink', 'Api\ForgotPasswordController@sendResetLinkEmail');
 Route::post('resetPassword', 'Api\ResetPasswordController@reset');
+
+//post
+Route::post('posts/create','Api\PostsController@create');
+Route::post('posts/delete','Api\PostsController@delete');
+Route::post('posts/update','Api\PostsController@update');
+Route::get('posts','Api\PostsController@posts');
+
+
+
 
 
 // User settings Routes
