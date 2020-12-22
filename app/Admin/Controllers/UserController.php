@@ -10,6 +10,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Illuminate\Support\Facades\Hash;
+use App\Admin\Actions\User\Restore;
 
 
 class UserController extends AdminController
@@ -30,13 +31,33 @@ class UserController extends AdminController
     {
         $grid = new Grid(new User());
 
-        $grid->column('id', __('Id'));
+        $grid->column('id', __('Id'))->sortable();
         $grid->column('first_name', __('First name'))->editable();
         $grid->column('last_name', __('Last name'))->editable();
         $grid->column('email', __('Email'))->editable();
         $grid->column('type', __('Type'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
+        $grid->filter(function($filter) {
+            $filter->like('first_name', 'First Name');
+            $filter->like('last_name', 'Last Name');
+            $filter->like('email', 'Email');
+            $filter->like('type', 'Type');
+            // Range filter, call the model's `onlyTrashed` method to query the soft deleted data.
+            $filter->scope('trashed', 'Soft Deleted Users')->onlyTrashed();
+        });
+        if (\ request('_scope_') == 'trashed') {
+            $grid->column('deleted_at', __('Deleted at'));
+
+        }
+        $grid->actions(function ($actions) {
+            if (\ request('_scope_') == 'trashed') {
+                $actions->add(new Restore());
+                $actions->disableView();
+
+            }
+
+        });
         return $grid;
     }
 
@@ -53,7 +74,6 @@ class UserController extends AdminController
         $show->field('first_name', __('First name'));
         $show->field('last_name', __('Last name'));
         $show->field('email', __('Email'));
-        $show->field('email_verified_at', __('Email verified at'));
         $show->field('type', __('Type'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
