@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Provider;
-use App\Client;
+use ent;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -69,19 +69,14 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'type' => $data['type']
-        ]); 
+        ]);
         $id = $user->id;
         if ($data['type']=="provider"){
             Provider::create([
                 "provider_id"=>$id
             ]);
         }
-        else{
-            Client::create([
-                'client_id' => $id
-            ]);
-        }
-       
+
         return $user;
     }
 }

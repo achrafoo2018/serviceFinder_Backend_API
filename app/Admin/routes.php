@@ -3,7 +3,6 @@
 use Illuminate\Routing\Router;
 
 Admin::routes();
-
 Route::group([
     'prefix'        => config('admin.route.prefix'),
     'namespace'     => config('admin.route.namespace'),
@@ -12,5 +11,6 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/', 'HomeController@index')->name('home');
+    $router->resource('/users', UserController::class);
 
 });
