@@ -111,7 +111,7 @@ class UserController extends Controller
                         'user' => $user
                     ]);
                 }
-                return $this->vaidateTokenError();
+                return $this->validateTokenError();
             }
             return $this->getUserByIdError();
 
@@ -144,7 +144,7 @@ class UserController extends Controller
                         'user' => $user
                     ]);
                 }
-                return $this->vaidateTokenError();
+                return $this->validateTokenError();
             }
             return $this->getUserByIdError();
         }catch(ModelNotFoundException $e){
