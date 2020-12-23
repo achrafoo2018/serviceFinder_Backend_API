@@ -69,7 +69,7 @@ class UserController extends Controller
                     'user' => $provider
                 ]);
             }
-            return $this->vaidateTokenError();
+            return $this->validateTokenError();
         }
         return $this->getUserByIdError();
 
