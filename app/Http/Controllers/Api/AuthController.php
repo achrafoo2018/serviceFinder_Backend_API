@@ -32,7 +32,7 @@ class AuthController extends Controller
                 'success'=>true,
                 'token' => $token,
                 'user' => Auth::user(),
-                'provider' => App\Provider::find($user->id)
+                'provider' => Provider::where("provider_id", $user->id)->first()
             ]);
 
         return response()->json([

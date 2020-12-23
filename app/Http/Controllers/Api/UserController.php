@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\User;
+use App\Provider;
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use JWTAuth;
@@ -19,7 +20,7 @@ class UserController extends Controller
 
             $user = User::find((int)$request['id']);
             if($user->type == 'provider'){
-                
+
                 $provider = Provider::where('provider_id',(int)$user->id)->get();
 
                 return response()->json([
@@ -52,10 +53,10 @@ class UserController extends Controller
                 $provider = Provider::where('provider_id',(int)$user->id)->get();
                 if($provider->service != $request->service)
                     $provider->service = $request->service;
-                
+
                 if($provider->speciality != $request->speciality)
                     $provider->speciality = $request->speciality;
-                    
+
                 if($provider->phone_number != $request->phone_number)
                     $provider->phone_number = $request->phone_number;
 
@@ -73,7 +74,7 @@ class UserController extends Controller
         }
         return $this->getUserByIdError();
 
-            
+
         }catch(ModelNotFoundException $e){
             return response()->json([
                 'error' => $e->getMessage()
@@ -91,21 +92,19 @@ class UserController extends Controller
 
                     if($user->first_name != $request->first_name && $request->first_name != "")
                         $user->first_name = $request->first_name;
-                    
+
                     if($user->last_name != $request->last_name && $request->last_name != "")
                         $user->last_name = $request->last_name;
-                        
+
                     if($request->exists("email") && $user->email != $request->email && $request->email != "")
                         $user->email = $request->email;
 
-                    if($user->profile_picture != $request->profile_picture && $request->profile_picture != "")
-
+                    if($user->profile_picture != $request->profile_picture && $request->profile_picture != ""){
                         file_put_contents('storage/profiles/'.time().'.jpg', \base64_decode($request->profile_picture));
-
                         $user->profile_picture = time().'jpg';
-
+                    }
                     $user->save();
-                    
+
                     return response()->json([
                         'success' => true,
                         'user' => $user
@@ -134,7 +133,7 @@ class UserController extends Controller
                     $password = $request->password;
 
                     $user->password = Hash::make($password);
-            
+
                     $user->save();
 
                     return response()->json([
@@ -155,12 +154,12 @@ class UserController extends Controller
     }
 
     public static function validateToken(Request $request, User $user){
-        if($user->remember_token == $request->token)
+        if($user->remember_token == $request->bearerToken())
             return true;
         return false;
 
     }
-    
+
     public static function getUserById(Request $request){
         return User::find((int)$request->id);
     }
