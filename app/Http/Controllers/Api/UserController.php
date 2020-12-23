@@ -89,16 +89,16 @@ class UserController extends Controller
 
                 if($this->validateToken($request, $user)){
 
-                    if($user->first_name != $request->first_name)
+                    if($user->first_name != $request->first_name && $request->first_name != "")
                         $user->first_name = $request->first_name;
                     
-                    if($user->last_name != $request->last_name)
+                    if($user->last_name != $request->last_name && $request->last_name != "")
                         $user->last_name = $request->last_name;
                         
-                    if($user->email != $request->email)
+                    if($user->email != $request->email && $request->email != "")
                         $user->email = $request->email;
 
-                    if($user->profile_picture != $request->profile_picture)
+                    if($user->profile_picture != $request->profile_picture && $request->profile_picture != "")
                         $user->profile_picture = $request->profile_picture;
 
                     $user->save();
