@@ -95,11 +95,14 @@ class UserController extends Controller
                     if($user->last_name != $request->last_name && $request->last_name != "")
                         $user->last_name = $request->last_name;
                         
-                    if($user->email != $request->email && $request->email != "")
+                    if($request->exists("email") && $user->email != $request->email && $request->email != "")
                         $user->email = $request->email;
 
                     if($user->profile_picture != $request->profile_picture && $request->profile_picture != "")
-                        $user->profile_picture = $request->profile_picture;
+
+                        file_put_contents('storage/profiles/'.time().'.jpg', \base64_decode($request->profile_picture));
+
+                        $user->profile_picture = time().'jpg';
 
                     $user->save();
                     
@@ -135,7 +138,8 @@ class UserController extends Controller
                     $user->save();
 
                     return response()->json([
-                        'Message' => "Password changed successfully!",
+                        'success' => true,
+                        'message' => "Password changed successfully!",
                         'token' => $user->remember_token,
                         'user' => $user
                     ]);
@@ -163,12 +167,14 @@ class UserController extends Controller
 
     public static function getUserByIdError(){
         return response()->json([
+            'success' => false,
             'error' => 'Incorrect User!'
         ]);
     }
 
     public static function validateTokenError(){
         return response()->json([
+            'success' => false,
             'error' => 'Incorrect Token!'
         ]);
     }

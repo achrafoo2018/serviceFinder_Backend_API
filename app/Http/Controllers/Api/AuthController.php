@@ -27,6 +27,14 @@ class AuthController extends Controller
         $user = Auth::user();
         $user->remember_token = $token;
         $user->save();
+        if($user->type == 'Provider')
+            return response()->json([
+                'success'=>true,
+                'token' => $token,
+                'user' => Auth::user(),
+                'provider' => App\Provider::find($user->id)
+            ]);
+
         return response()->json([
             'success'=>true,
             'token' => $token,
