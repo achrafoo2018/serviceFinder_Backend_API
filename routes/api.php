@@ -30,6 +30,8 @@ Route::post('posts/create','Api\PostsController@create');
 Route::post('posts/delete','Api\PostsController@delete');
 Route::post('posts/update','Api\PostsController@update');
 Route::get('posts','Api\PostsController@posts');
+Route::get('posts/myPosts','Api\PostsController@myPosts');
+
 
 
 
