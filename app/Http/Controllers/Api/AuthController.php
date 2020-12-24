@@ -84,7 +84,8 @@ class AuthController extends Controller
                     $user->save();
 
                     return response()->json([
-                        'Message' => "User logged out successfully!",
+                        'success' => true,
+                        'message' => "User logged out successfully!",
                     ]);
 
                 }
