@@ -15,8 +15,8 @@ class PostsController extends Controller
     public function create(Request $request){
 
         try{
-            
-            $user = UserController::getUserById($request->id);
+
+            $user = UserController::getUserById($request);
             if($user){
                 if(UserController::validateToken($request, $user)){
                     $post = new Post;
@@ -28,7 +28,7 @@ class PostsController extends Controller
                         //choose a unique name for photo
                         $photo = time().'.jpg';
                         file_put_contents('storage/posts/'.$photo,base64_decode($request->photo));
-                        $post->photo = $photo;
+                        $post->post_image = $photo;
                     }
                     $post->save();
                     $post->user;
@@ -64,7 +64,7 @@ class PostsController extends Controller
     }
 
     public function myPosts(Request $request){
-        $user = UserController::getUserById($request->id);
+        $user = UserController::getUserById($request);
         $posts = Post::where('user_id', $user->id)->orderBy('id', 'desc')->get();
         return response()->json([
             'success' => true,
