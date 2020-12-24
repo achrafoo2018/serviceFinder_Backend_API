@@ -31,5 +31,17 @@ class PostsController extends Controller
             'message' => 'posted',
             'post' => $post
         ]);
-}
+    }
+    public function posts(){
+        $posts = Post::orderBy('id','desc')->get();
+        foreach($posts as $post){
+            //get user of post
+            $post->user;
+            //comments count
+        }
+        return response()->json([
+            'success' => true,
+            'posts' => $posts
+        ]);
+    }
 }
