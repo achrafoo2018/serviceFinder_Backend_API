@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\UserController;
 use App\Post;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -64,12 +65,23 @@ class PostsController extends Controller
     }
 
     public function myPosts(Request $request){
-        $user = UserController::getUserById($request);
-        $posts = Post::where('user_id', $user->id)->orderBy('id', 'desc')->get();
-        return response()->json([
-            'success' => true,
-            'posts' => $posts,
-            'user' => $user
-        ]);
+            
+        try{
+            $user = User::where('remember_token', ($request->bearerToken()))->first();
+            if ($user){
+                    $posts = $user->posts;
+                    return response()->json([
+                        'success' => true,
+                        'posts' => $posts,
+                        'user' => $user
+                    ]);
+            }
+            return UserController::getUserByIdError();
+        }catch(ModelNotFoundException $e){
+            return response()->json([
+                'error' => $e->getMessage()
+            ]);
+        }
+        
     }
 }
