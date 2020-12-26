@@ -45,7 +45,7 @@ class UserController extends Controller
 
     public function updateProfile(Request $request){
         try{
-            $user = $this->getUserById($request);
+            $user = User::where('remember_token', ($request->bearerToken()))->first();
             if($user){
 
                 if($this->validateToken($request, $user)){
@@ -85,7 +85,7 @@ class UserController extends Controller
 
     public function updateAccount(Request $request){
         try{
-            $user = $this->getUserById($request);
+            $user = User::where('remember_token', ($request->bearerToken()))->first();
             if($user){
 
                 if($this->validateToken($request, $user)){
@@ -125,7 +125,7 @@ class UserController extends Controller
     public function changePassword(Request $request)
     {
         try{
-            $user = $this->getUserById($request);
+            $user = User::where('remember_token', ($request->bearerToken()))->first();
             if($user){
 
                 if($this->validateToken($request, $user)){
