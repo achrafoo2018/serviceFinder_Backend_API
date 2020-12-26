@@ -76,9 +76,8 @@ class AuthController extends Controller
     public function logout(Request $request){
         try{
 
-            $user = UserController::getUserById($request);
+            $user = User::where('remember_token', $request->bearerToken())->first();
             if($user){
-                if(UserController::validateToken($request, $user)){
 
                     $user->remember_token = "";
                     $user->save();
@@ -88,8 +87,6 @@ class AuthController extends Controller
                         'message' => "User logged out successfully!",
                     ]);
 
-                }
-                return UserController::validateTokenError();
             }
             return UserController::getUserByIdError();
         }
