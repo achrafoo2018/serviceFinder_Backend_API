@@ -27,7 +27,7 @@ class PostsController extends Controller
                     //check if post has photo
                     if($request->photo != ''){
                         //choose a unique name for photo
-                        $photo = time().'.jpg';
+                        $photo = 'storage/posts/'.time().'.jpg';
                         file_put_contents('storage/posts/'.$photo,base64_decode($request->photo));
                         $post->post_image = $photo;
                     }
@@ -65,7 +65,7 @@ class PostsController extends Controller
     }
 
     public function myPosts(Request $request){
-            
+
         try{
             $user = User::where('remember_token', ($request->bearerToken()))->first();
             if ($user){
@@ -82,6 +82,6 @@ class PostsController extends Controller
                 'error' => $e->getMessage()
             ]);
         }
-        
+
     }
 }
