@@ -130,7 +130,10 @@ class UserController extends Controller
 
                 if($this->validateToken($request, $user)){
 
+                    if(Hash::check($request->current_password, $user->password)){
+
                     $password = $request->password;
+
 
                     $user->password = Hash::make($password);
 
@@ -139,9 +142,17 @@ class UserController extends Controller
                     return response()->json([
                         'success' => true,
                         'message' => "Password changed successfully!",
-                        'token' => $user->remember_token,
                         'user' => $user
                     ]);
+
+                    }
+                    else{
+                    return response()->json([
+                        'success' => false,
+                        'error' => "Password incorrect!",
+                        'code' => 502
+                    ]);
+                    }
                 }
                 return $this->validateTokenError();
             }
