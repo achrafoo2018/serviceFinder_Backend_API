@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use App\Provider;
+use App\Comment;
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use JWTAuth;
@@ -164,6 +165,32 @@ class UserController extends Controller
         }
     }
 
+
+
+    public function getCommentsOnUserProfile(Request $request){
+        try{
+            $user = User::find($request->id);
+            if($user){
+                    $usersCommenting = [];
+                    $comments = Comment::where('provider_id',$user->id)->get();
+                    foreach($comments as $comment)
+                        $usersCommenting[] = $comment->user;
+                    return response()->json([
+                        'success' => true,
+                        'comments' => $comments,
+                        'user' => $user
+                    ]);
+
+            }
+            return $this->getUserByIdError();
+        }catch(ModelNotFoundException $e){
+            return response()->json([
+                'error' => $e.getMessage()
+            ]);
+        }
+    }
+
+
     public static function validateToken(Request $request, User $user){
         if($user->remember_token == $request->bearerToken())
             return true;
@@ -188,4 +215,5 @@ class UserController extends Controller
             'error' => 'Incorrect Token!'
         ]);
     }
+
 }

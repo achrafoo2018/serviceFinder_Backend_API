@@ -34,7 +34,9 @@ Route::get('posts/myPosts','Api\PostsController@myPosts');
 
 
 
+//User profile related routes
 
+Route::get('commentsOnMyAccount', 'Api\UserController@getCommentsOnUserProfile')->name("commentsOnMyAccount");
 
 
 // User settings Routes
