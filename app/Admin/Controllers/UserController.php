@@ -77,6 +77,7 @@ class UserController extends AdminController
         $show->field('type', __('Type'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
+        $show->avatar()->image();
 
         return $show;
     }
@@ -96,6 +97,8 @@ class UserController extends AdminController
             $form->password('password', __('Password'))->creationRules('required|min:8');
             $form->radio('type', __('Type'))->options(['Client'=>'Client', 'Provider'=>'Provider'])
                         ->default('Client')->creationRules('required');
+            $form->image('profile_picture', __('Profile Picture'))->move("public/profile/", time().'.jpg');;
+
             $form->saving(function (Form $form) {
                 $form->password = Hash::make($form->password);
             });
@@ -112,6 +115,7 @@ class UserController extends AdminController
             $form->text('last_name', __('Last name'))->disable();
             $form->email('email', __('Email'))->disable();
             $form->password('password', __('New Password'))->updateRules('required|min:8')->autofocus();
+            $form->image('profile_picture', __('Profile Picture'))->move("public/profile/", time().'.jpg');;
             $form->saving(function (Form $form) {
                 if($form->password != null && $form->password != '')
                     $form->password = Hash::make($form->password);

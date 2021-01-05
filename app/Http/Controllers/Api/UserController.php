@@ -102,7 +102,7 @@ class UserController extends Controller
 
                     if($user->profile_picture != $request->profile_picture && $request->profile_picture != ""){
                         file_put_contents('storage/profile/'.time().'.jpg', \base64_decode($request->profile_picture));
-                        $user->profile_picture = time().'.jpg';
+                        $user->profile_picture = 'storage/profile/'.time().'.jpg';
                     }
                     $user->save();
 
