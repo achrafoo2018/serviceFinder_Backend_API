@@ -31,14 +31,14 @@ class AuthController extends Controller
             return response()->json([
                 'success'=>true,
                 'token' => $token,
-                'user' => Auth::user(),
+                'user' => $user,
                 'provider' => Provider::where("provider_id", $user->id)->first()
             ]);
 
         return response()->json([
             'success'=>true,
             'token' => $token,
-            'user' => Auth::user()
+            'user' => $user
         ]);
     }
 

@@ -169,7 +169,7 @@ class UserController extends Controller
 
     public function getCommentsOnUserProfile(Request $request){
         try{
-            $user = User::where("email", $request->email)->first();
+            $user = User::where("email", $request->bearerToken())->first();
             if($user){
                     $comments = Comment::where('provider_id',$user->id)->get();
                     foreach($comments as $comment)
@@ -181,7 +181,10 @@ class UserController extends Controller
                     ]);
 
             }
-            return $this->getUserByIdError();
+            return response()->json([
+                'success' => false,
+                'error' => 'Incorrect User!'
+            ]);
         }catch(ModelNotFoundException $e){
             return response()->json([
                 'error' => $e.getMessage()
