@@ -169,12 +169,11 @@ class UserController extends Controller
 
     public function getCommentsOnUserProfile(Request $request){
         try{
-            $user = User::find($request->id);
+            $user = User::where("email", $request['email'])->first();
             if($user){
-                    $usersCommenting = [];
                     $comments = Comment::where('provider_id',$user->id)->get();
                     foreach($comments as $comment)
-                        $usersCommenting[] = $comment->user;
+                        $comment->user;
                     return response()->json([
                         'success' => true,
                         'comments' => $comments,
