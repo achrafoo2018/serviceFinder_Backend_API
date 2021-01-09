@@ -23,7 +23,7 @@ class PostsController extends Controller
                     $post = new Post;
                     $post->user_id = $request["id"];
                     $post->desc = $request["desc"];
-
+                    $post->speciality = $request["speciality"];
                     //check if post has photo
                     if($request->photo != ''){
                         //choose a unique name for photo
