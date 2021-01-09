@@ -84,4 +84,18 @@ class PostsController extends Controller
         }
 
     }
+    public function getSpecialities(Request $request){
+        try{
+            $specialities = \DB::table("specialities")->get();
+            return response()->json([
+                'success' => true,
+                'specialities' => $specialities
+            ]);
+
+        }catch(ModelNotFoundException $e){
+            return response()->json([
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
 }
