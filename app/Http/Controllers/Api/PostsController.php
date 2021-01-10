@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\UserController;
 use App\Post;
+use App\PostComment;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -83,6 +84,42 @@ class PostsController extends Controller
             ]);
         }
 
+    }
+    public function getCommentsOnPost(Request $request){
+        try{
+            $post = Post::find($request->bearerToken());
+            if($post){
+                    $postComments = PostComment::where("post_id", $post->id)->get();
+                    foreach($postComments as $comment)
+                        $comment->user;
+                    return response()->json([
+                        'success' => true,
+                        'comments' => $postComments,
+                    ]);
+            }
+            return response()->json([
+                'success' => false,
+                'error' => 'Incorrect User!'
+            ]);
+        }catch(ModelNotFoundException $e){
+            return response()->json([
+                'error' => $e.getMessage()
+            ]);
+        }
+    }
+    public function createComment(Request $request){
+        try{
+            $postComment = new PostComment($request->all());
+            $postComment->save();
+            return response()->json([
+                'success' => true,
+                'comment' => $postComment,
+            ]);
+        }catch (ModelNotFoundException $e) {
+            return response()->json([
+                'error' => $e.getMessage()
+            ]);
+        }
     }
     public function getPost(Request $request){
 
