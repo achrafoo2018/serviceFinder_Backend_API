@@ -38,6 +38,7 @@ Route::get('posts/getSpecialities','Api\PostsController@getSpecialities');
 //User profile related routes
 
 Route::get('commentsOnMyAccount', 'Api\UserController@getCommentsOnUserProfile')->name("commentsOnMyAccount");
+Route::post('createComment', 'Api\UserController@createComment')->name("createComment");
 
 
 // User settings Routes

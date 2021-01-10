@@ -177,7 +177,7 @@ class UserController extends Controller
                     return response()->json([
                         'success' => true,
                         'comments' => $comments,
-                        'user' => $user
+                        'user' => $user,
                     ]);
 
             }
@@ -186,6 +186,24 @@ class UserController extends Controller
                 'error' => 'Incorrect User!'
             ]);
         }catch(ModelNotFoundException $e){
+            return response()->json([
+                'error' => $e.getMessage()
+            ]);
+        }
+    }
+
+
+    public function createComment(Request $request){
+        try {
+            
+            $comment = new Comment($request->all());
+            $comment->save();
+            return response()->json([
+                'success' => true,
+                'comments' => $comment,
+            ]);
+
+        } catch (ModelNotFoundException $e) {
             return response()->json([
                 'error' => $e.getMessage()
             ]);
