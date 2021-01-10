@@ -171,7 +171,7 @@ class UserController extends Controller
         try{
             $user = User::where("email", $request->bearerToken())->first();
             if($user){
-                    $comments = Comment::where('provider_id',$user->id)->get();
+                    $comments = Comment::where('provider_id',$user->id)->orderBy('created_at', 'desc')->get();
                     foreach($comments as $comment)
                         $comment->user;
                     return response()->json([
