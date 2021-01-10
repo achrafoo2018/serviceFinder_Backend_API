@@ -18,7 +18,6 @@ class CreatePostCommentsTable extends Migration
             $table->unsignedBigInteger('user_id'); // Commentor
             $table->foreign('user_id')->references('id')
             ->on('users')->onDelete('cascade');
-            $table->bigIncrements('id');
             $table->unsignedBigInteger('post_id'); // Post
             $table->foreign('post_id')->references('id')
             ->on('posts')->onDelete('cascade');
