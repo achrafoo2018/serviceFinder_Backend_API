@@ -84,6 +84,28 @@ class PostsController extends Controller
         }
 
     }
+    public function getPost(Request $request){
+
+        try{
+            $post = Post::find($request->bearerToken());
+            if ($post){
+                $post->user;
+                return response()->json([
+                    'success' => true,
+                    'post' => $post,
+                ]);
+            }
+            return response()->json([
+                'success' => false,
+                'post' => $post,
+            ]);
+        }catch(ModelNotFoundException $e){
+            return response()->json([
+                'error' => $e->getMessage()
+            ]);
+        }
+
+    }
     public function getSpecialities(Request $request){
         try{
             $specialities = \DB::table("specialities")->get();

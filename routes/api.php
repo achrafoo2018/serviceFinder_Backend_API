@@ -29,6 +29,7 @@ Route::post('resetPassword', 'Api\ResetPasswordController@reset');
 Route::post('posts/create','Api\PostsController@create');
 Route::post('posts/delete','Api\PostsController@delete');
 Route::post('posts/update','Api\PostsController@update');
+Route::get('posts/getPost','Api\PostsController@getPost');
 Route::get('posts','Api\PostsController@posts');
 Route::get('posts/myPosts','Api\PostsController@myPosts');
 Route::get('posts/getSpecialities','Api\PostsController@getSpecialities');
