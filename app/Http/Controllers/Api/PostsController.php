@@ -89,7 +89,7 @@ class PostsController extends Controller
         try{
             $post = Post::find($request->bearerToken());
             if($post){
-                    $postComments = PostComment::where("post_id", $post->id)->get();
+                    $postComments = PostComment::where("post_id", $post->id)->orderByDesc("created_at")->get();
                     foreach($postComments as $comment)
                         $comment->user;
                     return response()->json([
