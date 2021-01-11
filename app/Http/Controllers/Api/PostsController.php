@@ -57,6 +57,7 @@ class PostsController extends Controller
         foreach($posts as $post){
             //get user of post
             $post->user;
+            $post->comments;
             //comments count
         }
         return response()->json([
