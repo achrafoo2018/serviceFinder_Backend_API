@@ -158,4 +158,18 @@ class PostsController extends Controller
             ]);
         }
     }
+    public function getUsedSpecialities(Request $request){
+        try{
+            $specialities = Post::select("speciality")->distinct()->get();
+            return response()->json([
+                'success' => true,
+                'specialities' => $specialities
+            ]);
+
+        }catch(ModelNotFoundException $e){
+            return response()->json([
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
 }
