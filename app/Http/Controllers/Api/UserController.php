@@ -207,6 +207,10 @@ class UserController extends Controller
             return response()->json([
                 'error' => $e.getMessage()
             ]);
+        } catch (Exception $e){
+            return response()->json([
+                'error' => $e.getMessage()
+            ]);
         }
     }
 

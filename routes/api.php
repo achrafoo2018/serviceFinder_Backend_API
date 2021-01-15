@@ -36,6 +36,7 @@ Route::get('posts/getSpecialities','Api\PostsController@getSpecialities');
 Route::get('posts/getUsedSpecialities','Api\PostsController@getUsedSpecialities');
 Route::post('posts/createComment', 'Api\PostsController@createComment');
 Route::post('posts/commentsOnPost', 'Api\PostsController@getCommentsOnPost');
+Route::get('posts/getPost','Api\PostsController@getPost');
 
 
 
