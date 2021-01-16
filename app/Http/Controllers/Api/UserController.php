@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\User;
 use App\Provider;
 use App\Comment;
+use App\PostComment;
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use JWTAuth;
@@ -241,6 +242,35 @@ class UserController extends Controller
 
             // $comment = Comment::find($request->comment_id);
             $comment = Comment::where("id", (int)$request->bearerToken())->first();
+            if($comment){
+                $comment->delete();
+                return response()->json([
+                    'success' => true,
+                    'comment' => $comment,
+                ]);
+            }
+            else{
+                return response()->json([
+                    'error' => "Could not find comment!",
+                ]);
+            }
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'error' => $e.getMessage()
+            ]);
+        } catch (Exception $e){
+            return response()->json([
+                'error' => $e.getMessage()
+            ]);
+        }
+    }
+
+    public function deletePostComment(Request $request){
+        try {
+
+            // $comment = Comment::find($request->comment_id);
+            $comment = PostComment::where("id", (int)$request->bearerToken())->first();
             if($comment){
                 $comment->delete();
                 return response()->json([

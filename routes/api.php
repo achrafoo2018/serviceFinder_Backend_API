@@ -39,6 +39,8 @@ Route::post('posts/commentsOnPost', 'Api\PostsController@getCommentsOnPost');
 Route::post('posts/editComment', 'Api\UserController@editComment');
 Route::get('posts/deleteComment', 'Api\UserController@deleteComment');
 
+Route::get('posts/deletePostComment', 'Api\UserController@deletePostComment');
+
 Route::get('posts/getPost','Api\PostsController@getPost');
 
 
