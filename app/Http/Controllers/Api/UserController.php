@@ -214,6 +214,57 @@ class UserController extends Controller
         }
     }
 
+    public function editComment(Request $request){
+        try {
+            
+            $comment = Comment::find($request->comment_id);
+            $comment->comment = $request->comment;
+            $comment->save();
+            return response()->json([
+                'success' => true,
+                'comments' => $comment,
+            ]);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'error' => $e.getMessage()
+            ]);
+        } catch (Exception $e){
+            return response()->json([
+                'error' => $e.getMessage()
+            ]);
+        }
+    }
+
+    public function deleteComment(Request $request){
+        try {
+
+            // $comment = Comment::find($request->comment_id);
+            $comment = Comment::where("id", (int)$request->bearerToken())->first();
+            if($comment){
+                $comment->delete();
+                return response()->json([
+                    'success' => true,
+                    'comment' => $comment,
+                ]);
+            }
+            else{
+                return response()->json([
+                    'error' => $request->comment_id,
+                ]);
+            }
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'error' => $e.getMessage()
+            ]);
+        } catch (Exception $e){
+            return response()->json([
+                'error' => $e.getMessage()
+            ]);
+        }
+    }
+
 
     public static function validateToken(Request $request, User $user){
         if($user->remember_token == $request->bearerToken())
