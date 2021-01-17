@@ -19,9 +19,10 @@ class CreateCommentsTable extends Migration
             $table->foreign('user_id')->references('id')
             ->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('provider_id'); // Commentor bihi
-            $table->foreign('provider_id')->references('provider_id')
-            ->on('providers')->onDelete('cascade');
+            $table->foreign('provider_id')->references('id')
+            ->on('users')->onDelete('cascade');
             $table->string('comment');
+            $table->integer('rating');
             $table->timestamps();
 
 

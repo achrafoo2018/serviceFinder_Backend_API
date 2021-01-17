@@ -13,6 +13,7 @@ class Comment extends Model
         'user_id',
         'provider_id',
         'comment',
+        'rating',
     ];
 
     public function user(){
