@@ -196,7 +196,7 @@ class UserController extends Controller
 
     public function createComment(Request $request){
         try {
-            
+
             $comment = new Comment($request->all());
             $comment->save();
             return response()->json([
@@ -217,7 +217,7 @@ class UserController extends Controller
 
     public function editComment(Request $request){
         try {
-            
+
             $comment = Comment::find($request->comment_id);
             $comment->comment = $request->comment;
             $comment->save();
@@ -240,8 +240,7 @@ class UserController extends Controller
     public function deleteComment(Request $request){
         try {
 
-            // $comment = Comment::find($request->comment_id);
-            $comment = Comment::where("id", (int)$request->bearerToken())->first();
+            $comment = Comment::find($request->bearerToken());
             if($comment){
                 $comment->delete();
                 return response()->json([
@@ -251,7 +250,7 @@ class UserController extends Controller
             }
             else{
                 return response()->json([
-                    'error' => "Could not find comment!",
+                    'error' => "Could not find comment ".$request->bearerToken()."!",
                 ]);
             }
 
@@ -268,9 +267,7 @@ class UserController extends Controller
 
     public function deletePostComment(Request $request){
         try {
-
-            // $comment = Comment::find($request->comment_id);
-            $comment = PostComment::where("id", (int)$request->bearerToken())->first();
+            $comment = PostComment::find($request->bearerToken());
             if($comment){
                 $comment->delete();
                 return response()->json([
@@ -280,7 +277,7 @@ class UserController extends Controller
             }
             else{
                 return response()->json([
-                    'error' => $request->comment_id,
+                    'error' => $request->bearerToken(),
                 ]);
             }
 
