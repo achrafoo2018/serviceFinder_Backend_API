@@ -179,6 +179,7 @@ class PostsController extends Controller
         // we need to check user id with post user id
 
             $user = User::where('remember_token', ($request->bearerToken()))->first();
+        if($user){
             if ($user->id!=$post->user_id){
             return response()->json([
                 'success' => false,
@@ -191,20 +192,27 @@ class PostsController extends Controller
             'success' => true,
             'message' => 'post edited'
         ]);
-        
+        }else{
+            return response()->json([
+                'success' => false,
+                'message' => 'user not found'
+            ]);
         }
- //delete post 
+        }
+ //delete post
     public function delete(Request $request){
         $post = Post::find($request->id);
         // check if user is editing his own post
         $user = User::where('remember_token', ($request->bearerToken()))->first();
+        if($user){
             if ($user->id!=$post->user_id){
             return response()->json([
                 'success' => false,
                 'message' => 'unauthorized access'
             ]);
         }
-        
+
+
         //check if post has photo to delete
         if($post->photo != ''){
             Storage::delete('public/posts/'.$post->photo);
@@ -215,4 +223,11 @@ class PostsController extends Controller
             'message' => 'post deleted'
         ]);
     }
+    else{
+        return response()->json([
+            'success' => false,
+            'message' => 'user not found'
+        ]);
+    }
+}
 }
