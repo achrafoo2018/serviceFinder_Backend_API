@@ -237,6 +237,28 @@ class UserController extends Controller
         }
     }
 
+    public function getUserRating(Request $request){
+        try {
+
+            $comment = Comment::where('provider_id', $request->bearerToken())->avg("rating");
+            $total = Comment::where('provider_id', $request->bearerToken())->count();
+            return response()->json([
+                'success' => true,
+                'rate' => $comment,
+                'total' => $total
+            ]);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'error' => $e.getMessage()
+            ]);
+        } catch (Exception $e){
+            return response()->json([
+                'error' => $e.getMessage()
+            ]);
+        }
+    }
+
     public function deleteComment(Request $request){
         try {
 
