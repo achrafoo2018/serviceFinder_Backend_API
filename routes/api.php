@@ -35,6 +35,13 @@ Route::get('posts/myPosts','Api\PostsController@myPosts');
 Route::get('posts/getSpecialities','Api\PostsController@getSpecialities');
 
 
+//comments
+Route::post('comments/create','Api\CommentsController@create');
+Route::post('comments/delete','Api\CommentsController@delete');
+Route::post('comments/update','Api\CommentsController@update');
+Route::post('posts/Comments','Api\CommentsController@comments');
+
+
 
 //User profile related routes
 

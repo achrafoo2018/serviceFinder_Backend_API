@@ -120,4 +120,44 @@ class PostsController extends Controller
             ]);
         }
     }
+
+    public function update(Request $request){
+        $post= Post::find($request->id);
+
+        if(Auth::user()->id != $request->id){
+            return response()->json([
+                'success' => false,
+                'message' => 'unauthorized access'
+            ]);
+        }
+        $post->desc = $request->desc;
+        $post->update();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'post edited'
+        ]);
+    }
+
+    public function delete(Request $request){
+        $post= Post::find($request->id);
+
+        if(Auth::user()->id != $request->id){
+            return response()->json([
+                'success' => false,
+                'message' => 'unauthorized access'
+            ]);
+        }
+        
+        if($post->photo !=''){
+            Storage::delete('public/posts/'.$post->photo);
+        }
+        $post->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'post deleted'
+        ]);
+    }
+
 }
