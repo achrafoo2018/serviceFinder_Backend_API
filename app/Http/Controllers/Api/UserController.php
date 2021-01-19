@@ -53,15 +53,13 @@ class UserController extends Controller
                 if($this->validateToken($request, $user)){
 
                 $provider = Provider::where('provider_id',(int)$user->id)->get();
-                if($provider->service != $request->service)
-                    $provider->service = $request->service;
-
                 if($provider->speciality != $request->speciality)
                     $provider->speciality = $request->speciality;
 
-                if($provider->phone_number != $request->phone_number)
-                    $provider->phone_number = $request->phone_number;
-
+                if($user->phone_number != $request->phone_number){
+                    $user->phone_number = $request->phone_number;
+                    $user->save();
+                }
                 if($provider->description != $request->description)
                     $provider->description = $request->description;
 
