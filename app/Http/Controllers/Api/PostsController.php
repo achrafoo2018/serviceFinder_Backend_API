@@ -186,8 +186,17 @@ class PostsController extends Controller
                 'message' => 'unauthorized access'
             ]);
         }
+        if($request->image != ""){
+            Storage::delete('public/posts/'.$post->post_image);
+            $photo = 'storage/posts/'.time().'.jpg';
+            file_put_contents($photo, base64_decode($request->image));
+            $post->post_image = $photo;
+        }
         $post->desc = $request->desc;
-        $post->update();
+        if($post->speciality != $request->speciality){
+            $post->speciality = $request->speciality;
+        }
+        $post->save();
         return response()->json([
             'success' => true,
             'message' => 'post edited'
