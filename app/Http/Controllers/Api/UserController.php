@@ -196,12 +196,25 @@ class UserController extends Controller
 
     public function createComment(Request $request){
         try {
+            $x = 0;
+            if(count(Comment::where('user_id',$request->user_id)->where('provider_id',$request->provider_id)->get()) > 0){
+                $x = 1;
+                $c = Comment::where('user_id',$request->user_id)->where('provider_id',$request->provider_id)->get();
+                $user = User::find($request->user_id);
+                return response()->json([
+                    'error' => 'Profile already reviewed',
+                    'counter' => $x,
+                    'comment' => $c,
+                    'user' => $user
 
+                ]);
+            }
             $comment = new Comment($request->all());
             $comment->save();
             return response()->json([
                 'success' => true,
                 'comments' => $comment,
+                'counter' => $x
             ]);
 
         } catch (ModelNotFoundException $e) {
