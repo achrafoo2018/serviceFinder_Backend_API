@@ -10,7 +10,6 @@ class Provider extends Model
         'provider_id',
         'service',
         'speciality',
-        'phone_number',
         'description',
         'rating'
     ];
