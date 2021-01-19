@@ -53,15 +53,13 @@ class UserController extends Controller
                 if($this->validateToken($request, $user)){
 
                 $provider = Provider::where('provider_id',(int)$user->id)->get();
-                if($provider->service != $request->service)
-                    $provider->service = $request->service;
-
                 if($provider->speciality != $request->speciality)
                     $provider->speciality = $request->speciality;
 
-                if($provider->phone_number != $request->phone_number)
-                    $provider->phone_number = $request->phone_number;
-
+                if($user->phone_number != $request->phone_number){
+                    $user->phone_number = $request->phone_number;
+                    $user->save();
+                }
                 if($provider->description != $request->description)
                     $provider->description = $request->description;
 
@@ -237,6 +235,28 @@ class UserController extends Controller
             return response()->json([
                 'success' => true,
                 'comments' => $comment,
+            ]);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'error' => $e.getMessage()
+            ]);
+        } catch (Exception $e){
+            return response()->json([
+                'error' => $e.getMessage()
+            ]);
+        }
+    }
+
+    public function getUserRating(Request $request){
+        try {
+
+            $comment = Comment::where('provider_id', $request->bearerToken())->avg("rating");
+            $total = Comment::where('provider_id', $request->bearerToken())->count();
+            return response()->json([
+                'success' => true,
+                'rate' => $comment,
+                'total' => $total
             ]);
 
         } catch (ModelNotFoundException $e) {

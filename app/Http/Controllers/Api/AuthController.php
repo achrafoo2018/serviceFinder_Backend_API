@@ -48,16 +48,17 @@ class AuthController extends Controller
         $rules = [
             'type' => 'required',
             'email'    => 'unique:users|required',
-            'password' => 'required',
+            'password' => 'required|min:8',
         ];
 
         $input     = $request->only('email','password', "type");
         $validator = Validator::make($input, $rules);
-
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'error' => $validator->messages()]);
+        if($validator->fails()){
+            return response()->json([
+                'success'=>false,
+                'error' => $validator->errors()->first(),
+            ]);
         }
-
         $user = User::create([
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
