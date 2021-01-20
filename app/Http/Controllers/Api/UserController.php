@@ -44,7 +44,23 @@ class UserController extends Controller
         }
 
     }
-
+    public function verifyUser(Request $request){
+        try{
+            $user = User::where('remember_token', $request->bearerToken())->first();
+            if($user){
+                return response()->json([
+                    'success' => true,
+                    'user' => $user
+                ]);
+            }
+            return $this->validateTokenError();
+        }
+        catch(ModelNotFoundException $e){
+            return response()->json([
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
     public function updateProfile(Request $request){
         try{
             $user = User::where('remember_token', ($request->bearerToken()))->first();
@@ -92,6 +108,9 @@ class UserController extends Controller
 
                     if($user->first_name != $request->first_name && $request->first_name != "")
                         $user->first_name = $request->first_name;
+
+                    if($user->phone_number != $request->phone_number && $request->phone_number != "")
+                        $user->phone_number = $request->phone_number;
 
                     if($user->last_name != $request->last_name && $request->last_name != "")
                         $user->last_name = $request->last_name;
