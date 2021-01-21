@@ -61,6 +61,43 @@ class UserController extends Controller
             ]);
         }
     }
+
+    public function getUserNotificationsCount(Request $request){
+        try{
+            $user = User::where('remember_token', $request->bearerToken())->first();
+            if($user){
+
+                    return response()->json([
+                        'success' => true,
+                        'total' => $user->unreadNotifications->count()
+                    ]);
+            }
+            return $this->validateTokenError();
+        }
+        catch(ModelNotFoundException $e){
+            return response()->json([
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function getUserNotifications(Request $request){
+        try{
+            $user = User::where('remember_token', $request->bearerToken())->first();
+            if($user){
+                return response()->json([
+                    'success' => true,
+                    'notifications' => $user->notifications->sortBy("created_at")
+                ]);
+            }
+            return $this->validateTokenError();
+        }
+        catch(ModelNotFoundException $e){
+            return response()->json([
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
     public function updateProfile(Request $request){
         try{
             $user = User::where('remember_token', $request->bearerToken())->first();
