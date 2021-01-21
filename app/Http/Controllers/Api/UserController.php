@@ -68,22 +68,24 @@ class UserController extends Controller
 
                 if($this->validateToken($request, $user)){
 
-                $provider = Provider::where('provider_id',(int)$user->id)->get();
-                if($provider->speciality != $request->speciality)
-                    $provider->speciality = $request->speciality;
+                $provider = Provider::where('provider_id',(int)$user->id)->first();
+                if($provider){
 
-                if($user->phone_number != $request->phone_number){
-                    $user->phone_number = $request->phone_number;
-                    $user->save();
+                    if($provider->speciality != $request->speciality)
+                        $provider->speciality = $request->speciality;
+
+                    if($provider->description != $request->description)
+                        $provider->description = $request->description;
+
+                    $provider->save();
+
+                    return response()->json([
+                        'success' => true,
+                        'user' => $provider
+                    ]);
                 }
-                if($provider->description != $request->description)
-                    $provider->description = $request->description;
-
-                $provider->save();
-
                 return response()->json([
-                    'success' => true,
-                    'user' => $provider
+                    'error' => 'Provider not found!'
                 ]);
             }
             return $this->validateTokenError();
@@ -189,6 +191,19 @@ class UserController extends Controller
         try{
             $user = User::where("email", $request->bearerToken())->first();
             if($user){
+                    if($user->type == "Provider"){
+                        $provider = Provider::where('provider_id',(int)$user->id)->first();
+                        $comments = Comment::where('provider_id',$user->id)->orderBy('created_at', 'desc')->get();
+                        foreach($comments as $comment)
+                            $comment->user;
+                        return response()->json([
+                            'success' => true,
+                            'comments' => $comments,
+                            'user' => $user,
+                            'provider' => $provider
+                        ]);
+                    }
+                    else{
                     $comments = Comment::where('provider_id',$user->id)->orderBy('created_at', 'desc')->get();
                     foreach($comments as $comment)
                         $comment->user;
@@ -197,6 +212,7 @@ class UserController extends Controller
                         'comments' => $comments,
                         'user' => $user,
                     ]);
+                    }
 
             }
             return response()->json([
