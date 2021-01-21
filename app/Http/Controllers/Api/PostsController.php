@@ -10,7 +10,7 @@ use App\PostComment;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-
+use App\Notifications\commentsNotifications;
 
 class PostsController extends Controller
 {
@@ -112,6 +112,11 @@ class PostsController extends Controller
         try{
             $postComment = new PostComment($request->all());
             $postComment->save();
+            $commenter = User::find($request->user_id);
+            $post = Post::find($request->post_id);
+            $user = User::find($post->user_id);
+            if($user->id != $commenter->id) // don't notify when it's the poster who commented
+                $user->notify(new commentsNotifications($commenter, $post));
             return response()->json([
                 'success' => true,
                 'comment' => $postComment,

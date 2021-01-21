@@ -44,6 +44,8 @@ Route::get('posts/deleteComment', 'Api\UserController@deleteComment');
 Route::get('posts/getUserRating', 'Api\UserController@getUserRating');
 
 Route::get('posts/deletePostComment', 'Api\UserController@deletePostComment');
+Route::get('getUserNotificationsCount', 'Api\UserController@getUserNotificationsCount');
+Route::get('getUserNotifications', 'Api\UserController@getUserNotifications');
 
 Route::get('posts/getPost','Api\PostsController@getPost');
 
