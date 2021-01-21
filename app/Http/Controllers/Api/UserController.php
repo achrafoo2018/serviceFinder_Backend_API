@@ -63,12 +63,11 @@ class UserController extends Controller
     }
     public function updateProfile(Request $request){
         try{
-            $user = User::where('remember_token', ($request->bearerToken()))->first();
+            $user = User::where('remember_token', $request->bearerToken())->first();
             if($user){
 
                 if($this->validateToken($request, $user)){
-
-                $provider = Provider::where('provider_id',(int)$user->id)->first();
+                $provider = Provider::where('provider_id', $user->id)->first();
                 if($provider){
 
                     if($provider->speciality != $request->speciality)
@@ -78,7 +77,6 @@ class UserController extends Controller
                         $provider->description = $request->description;
 
                     $provider->save();
-
                     return response()->json([
                         'success' => true,
                         'user' => $provider
