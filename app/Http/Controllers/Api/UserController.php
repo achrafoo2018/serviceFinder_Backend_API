@@ -173,11 +173,11 @@ class UserController extends Controller
             ]);
         }
     }
-    public function DeleteAllNotification(Request $request){
+    public function DeleteAllNotifications(Request $request){
         try{
             $user = User::where('remember_token', $request->bearerToken())->first();
             if($user){
-                $user->notifications->delete();
+                $user->notifications()->delete();
                 return response()->json([
                     'success' => true,
                 ]);
