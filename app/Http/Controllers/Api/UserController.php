@@ -87,6 +87,25 @@ class UserController extends Controller
             if($user){
                 return response()->json([
                     'success' => true,
+                    'notifications' => $user->notifications
+                ]);
+            }
+            return $this->validateTokenError();
+        }
+        catch(ModelNotFoundException $e){
+            return response()->json([
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function MarkAllNotificationsAsRead(Request $request){
+        try{
+            $user = User::where('remember_token', $request->bearerToken())->first();
+            if($user){
+                $user->unreadNotifications->markAsRead();
+                return response()->json([
+                    'success' => true,
                     'notifications' => $user->notifications->sortBy("created_at")
                 ]);
             }
@@ -95,6 +114,80 @@ class UserController extends Controller
         catch(ModelNotFoundException $e){
             return response()->json([
                 'error' => $e->getMessage()
+            ]);
+        }
+    }
+    public function MarkNotificationAsRead(Request $request){
+        try{
+            $token = explode("+", $request->bearerToken())[0];
+            $id = explode("+", $request->bearerToken())[1];
+            $user = User::where('remember_token', $token)->first();
+            if($user){
+                $notification = $user->notifications->where("id", $id)->first();
+                if($notification)
+                {
+                    $notification->markAsRead();
+                    return response()->json([
+                        'success' => true,
+                        'notification' => $notification
+                    ]);
+                }else{
+                    return response()->json([
+                        'success' => false,
+                        'request' => $request->getHeaders("id")
+                    ]);
+                }
+            }
+            return $this->validateTokenError();
+        }
+        catch(ModelNotFoundException $e){
+            return response()->json([
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    public function DeleteNotification(Request $request){
+        try{
+            $token = explode("+", $request->bearerToken())[0];
+            $id = explode("+", $request->bearerToken())[1];
+            $user = User::where('remember_token', $token)->first();
+            if($user){
+                $notification = $user->notifications->where("id", $id)->first();
+                if($notification)
+                {
+                    $notification->delete();
+                    return response()->json([
+                        'success' => true,
+                    ]);
+                }else{
+                    return response()->json([
+                        'success' => false,
+                    ]);
+                }
+            }
+            return $this->validateTokenError();
+        }
+        catch(ModelNotFoundException $e){
+            return response()->json([
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    public function DeleteAllNotification(Request $request){
+        try{
+            $user = User::where('remember_token', $request->bearerToken())->first();
+            if($user){
+                $user->notifications->delete();
+                return response()->json([
+                    'success' => true,
+                ]);
+
+            }
+            return $this->validateTokenError();
+        }
+        catch(ModelNotFoundException $e){
+            return response()->json([
+                'error' => $e->getMessage(),
             ]);
         }
     }

@@ -41,12 +41,8 @@ Route::post('posts/commentsOnPost', 'Api\PostsController@getCommentsOnPost');
 Route::post('posts/editComment', 'Api\UserController@editComment');
 Route::get('posts/deleteComment', 'Api\UserController@deleteComment');
 
-Route::get('posts/getUserRating', 'Api\UserController@getUserRating');
 
 Route::get('posts/deletePostComment', 'Api\UserController@deletePostComment');
-Route::get('getUserNotificationsCount', 'Api\UserController@getUserNotificationsCount');
-Route::get('getUserNotifications', 'Api\UserController@getUserNotifications');
-
 Route::get('posts/getPost','Api\PostsController@getPost');
 
 
@@ -56,7 +52,16 @@ Route::get('posts/getPost','Api\PostsController@getPost');
 
 Route::get('commentsOnMyAccount', 'Api\UserController@getCommentsOnUserProfile')->name("commentsOnMyAccount");
 Route::post('createComment', 'Api\UserController@createComment')->name("createComment");
+Route::get('posts/getUserRating', 'Api\UserController@getUserRating');
 
+// Notifications
+
+Route::get('getUserNotificationsCount', 'Api\UserController@getUserNotificationsCount');
+Route::get('getUserNotifications', 'Api\UserController@getUserNotifications');
+Route::get('MarkAllNotificationsAsRead', 'Api\UserController@MarkAllNotificationsAsRead');
+Route::get('MarkNotificationAsRead', 'Api\UserController@MarkNotificationAsRead');
+Route::get('DeleteNotification', 'Api\UserController@DeleteNotification');
+Route::get('DeleteAllNotifications', 'Api\UserController@DeleteAllNotifications');
 
 // User settings Routes
 Route::post('changePassword', 'Api\UserController@changePassword')->name("changePassword");
