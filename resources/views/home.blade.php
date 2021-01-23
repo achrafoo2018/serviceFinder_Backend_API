@@ -16,8 +16,6 @@
 
                     You are logged in!
 
-                    <a href="{{route('profile')}}">Hello</a>
-
                 </div>
             </div>
         </div>
